@@ -1,4 +1,4 @@
-package com.your.lol.presentation.dto;
+package com.your.lol.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
