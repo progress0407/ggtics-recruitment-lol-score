@@ -5,6 +5,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class GameResultResponse {
-    private InfoResponse info;
+public class MatchDto {
+    private InfoDto info;
 }

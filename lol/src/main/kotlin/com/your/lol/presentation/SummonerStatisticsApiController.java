@@ -2,8 +2,8 @@ package com.your.lol.presentation;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
-import com.your.lol.presentation.dto.GameResultResponse;
-import com.your.lol.presentation.dto.SummonerResponse;
+import com.your.lol.presentation.dto.MatchDto;
+import com.your.lol.presentation.dto.SummonerDto;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.core.ParameterizedTypeReference;
@@ -19,10 +19,10 @@ public class SummonerStatisticsApiController {
     public static final String API_KEY = "RGAPI-69961808-ee94-4d60-ac2b-4d68e178a340";
 
     @RequestMapping("/summoner/{summonerName}")
-    public List<GameResultResponse> findStatisticsBySummonerName(@PathVariable String summonerName) {
+    public List<MatchDto> findStatisticsBySummonerName(@PathVariable String summonerName) {
 
         // https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/{summonerName}
-        SummonerResponse summonerResponse = WebClient
+        SummonerDto summonerDTO = WebClient
                 .create("https://kr.api.riotgames.com/lol").get()
                 .uri(uriBuilder ->
                         uriBuilder
@@ -31,10 +31,10 @@ public class SummonerStatisticsApiController {
                                 .build(summonerName))
                 .accept(APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(SummonerResponse.class)
+                .bodyToMono(SummonerDto.class)
                 .block();
 
-        String summonerPuuid = summonerResponse.getPuuid();
+        String summonerPuuid = summonerDTO.getPuuid();
 
         WebClient asisApiClient = WebClient.create("https://asia.api.riotgames.com/lol");
         List<String> matchGames = asisApiClient.get()
@@ -52,9 +52,9 @@ public class SummonerStatisticsApiController {
                 .block();
 
         // https://asia.api.riotgames.com/lol/match/v5/matches/KR_6262807957?api_key=RGAPI-69961808-ee94-4d60-ac2b-4d68e178a340
-        List<GameResultResponse> gameResultResponses = new ArrayList<>();
+        List<MatchDto> matchDtos = new ArrayList<>();
         for (String matchGame : matchGames) {
-            GameResultResponse gameResult = asisApiClient.get()
+            MatchDto gameResult = asisApiClient.get()
                     .uri(uriBuilder ->
                             uriBuilder
                                     .path("/match/v5/matches/{matchGame}")
@@ -63,10 +63,10 @@ public class SummonerStatisticsApiController {
                     )
                     .accept(APPLICATION_JSON)
                     .retrieve()
-                    .bodyToMono(GameResultResponse.class)
+                    .bodyToMono(MatchDto.class)
                     .block();
-            gameResultResponses.add(gameResult);
+            matchDtos.add(gameResult);
         }
-        return gameResultResponses;
+        return matchDtos;
     }
 }

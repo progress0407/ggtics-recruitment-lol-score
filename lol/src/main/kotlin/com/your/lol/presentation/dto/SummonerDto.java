@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class SummonerResponse {
+public class SummonerDto {
     private String id;
     private String accountId;
     private String puuid;
