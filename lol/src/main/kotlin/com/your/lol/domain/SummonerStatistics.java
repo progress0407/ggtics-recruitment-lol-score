@@ -22,7 +22,7 @@ public class SummonerStatistics {
 
     private final WebClientFacade webClientFacade;
 
-    private List<MatchDto> matchDtos ;
+    private List<MatchDto> matchDtos;
 
     public StatisticsDto calculateStatisticsBySummonerName(String summonerName) {
         if (matchDtos == null) {
