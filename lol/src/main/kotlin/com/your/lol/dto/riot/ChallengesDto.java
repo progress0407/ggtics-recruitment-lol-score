@@ -1,4 +1,4 @@
-package com.your.lol.dto;
+package com.your.lol.dto.riot;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,4 +7,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChallengesDto {
     private long deathsByEnemyChamps;
+    private double kda;
 }

@@ -1,11 +1,16 @@
 package com.your.lol.domain;
 
+import static java.lang.System.out;
+import static java.util.stream.Collectors.toUnmodifiableList;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
-import com.your.lol.dto.MatchDto;
-import com.your.lol.dto.SummonerDto;
+import com.your.lol.dto.riot.ChallengesDto;
+import com.your.lol.dto.riot.MatchDto;
+import com.your.lol.dto.riot.ParticipantDto;
+import com.your.lol.dto.riot.ParticipantTeamDto;
+import com.your.lol.dto.riot.SummonerDto;
+import com.your.lol.dto.statistics.StatisticsDto;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.core.ParameterizedTypeReference;
@@ -19,11 +24,51 @@ public class SummonerStatistics {
     private static final WebClient krApiWebClient = WebClient.create("https://kr.api.riotgames.com/lol");
     private static final WebClient asisWebClient = WebClient.create("https://asia.api.riotgames.com/lol");
 
-    public List<MatchDto> calculateStatisticsBySummonerName(String summonerName) {
+    // TODO to local variable
+    private List<MatchDto> matchDtos ;
+
+    public StatisticsDto calculateStatisticsBySummonerName(String summonerName) {
+        if (matchDtos == null) {
+            matchDtos = requestRiotStatistics(summonerName);
+        }
+        matchDtos.forEach(out::println);
+
+        List<PreProcessedData> preProcessedData = createPreProcessData(summonerName, matchDtos);
+        preProcessedData.forEach(out::println);
+
+        StatisticsDto statisticsDto = new StatisticsDto(preProcessedData);
+        return statisticsDto;
+    }
+
+    @NotNull
+    private List<MatchDto> requestRiotStatistics(String summonerName) {
         SummonerDto summonerDto = requestSummonerDto(summonerName);
         String summonerPuuid = summonerDto.getPuuid();
         List<String> matchGames = requestMatchGames(summonerPuuid);
-        return requestMatchDtos(matchGames);
+        List<MatchDto> matchDtos = requestMatchDtos(matchGames);
+        return matchDtos;
+    }
+
+    private List<PreProcessedData> createPreProcessData(String summonerName, List<MatchDto> matchDtos) {
+        return matchDtos.stream()
+                .map(MatchDto::getInfo)
+                .map(info -> info.filterAndCreateCompositeDto(summonerName))
+                .map(participant -> mapPreProcessData(participant))
+                .collect(toUnmodifiableList());
+    }
+
+    private PreProcessedData mapPreProcessData(ParticipantTeamDto participantTeam) {
+        ParticipantDto participant = participantTeam.getParticipantDto();
+        ChallengesDto challenges = participant.getChallenges();
+        return PreProcessedData.builder()
+                .championName(participant.getChampionName())
+                .physicalDamageTaken(participant.getPhysicalDamageTaken())
+                .physicalDamageDealt(participant.getPhysicalDamageDealt())
+                .champExperience(participant.getChampExperience())
+                .deathsByEnemyChamps(challenges.getDeathsByEnemyChamps())
+                .kda(challenges.getKda())
+                .teamWin(participantTeam.isTeamWin())
+                .build();
     }
 
     @Nullable
@@ -59,7 +104,7 @@ public class SummonerStatistics {
     private List<MatchDto> requestMatchDtos(List<String> matchGames) {
         return matchGames.stream()
                 .map(it -> requestGameResult(it))
-                .collect(Collectors.toUnmodifiableList());
+                .collect(toUnmodifiableList());
     }
 
     @Nullable
