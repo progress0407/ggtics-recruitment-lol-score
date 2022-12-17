@@ -8,7 +8,7 @@ import com.your.lol.dto.riot.ChallengesDto;
 import com.your.lol.dto.riot.MatchDto;
 import com.your.lol.dto.riot.ParticipantDto;
 import com.your.lol.dto.riot.ParticipantTeamDto;
-import com.your.lol.dto.statistics.StatisticsDto;
+import com.your.lol.dto.statistics.StatsDto;
 import com.your.lol.support.WebClientFacade;
 import java.util.List;
 import java.util.Map;
@@ -18,26 +18,23 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class SummonerStatistics {
+public class LoLScoreStatsCalculator {
 
     private final WebClientFacade webClientFacade;
 
     private List<MatchDto> matchDtos;
 
-    public StatisticsDto calculateStatisticsBySummonerName(String summonerName) {
+    public StatsDto calculateStatsBySummonerName(String summonerName) {
         if (matchDtos == null) {
             matchDtos = webClientFacade.requestRiotStatistics(summonerName);
         }
-        matchDtos.forEach(out::println);
-
         List<PreProcessedData> preProcessedData = createPreProcessData(summonerName, matchDtos);
-        preProcessedData.forEach(out::println);
 
         return createStatistics(preProcessedData);
     }
 
     @NotNull
-    private StatisticsDto createStatistics(List<PreProcessedData> preProcessedData) {
+    private StatsDto createStatistics(List<PreProcessedData> preProcessedData) {
         double winRate = preProcessedData.stream()
                 .mapToInt(PreProcessedData::convertTeamWinToNumber)
                 .average()
@@ -47,8 +44,8 @@ public class SummonerStatistics {
                 preProcessedData.stream()
                         .collect(groupingBy(PreProcessedData::getChampionName));
 
-        StatisticsDto statisticsDto = new StatisticsDto(winRate, dataByChampion);
-        return statisticsDto;
+        StatsDto statsDto = new StatsDto(winRate, dataByChampion);
+        return statsDto;
     }
 
     private List<PreProcessedData> createPreProcessData(String summonerName, List<MatchDto> matchDtos) {

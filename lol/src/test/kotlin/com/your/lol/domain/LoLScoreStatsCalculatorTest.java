@@ -6,16 +6,16 @@ import static org.mockito.Mockito.mock;
 
 import com.google.gson.reflect.TypeToken;
 import com.your.lol.dto.riot.MatchDto;
-import com.your.lol.dto.statistics.StatisticsDto;
+import com.your.lol.dto.statistics.StatsDto;
 import com.your.lol.support.JsonFileConverter;
 import com.your.lol.support.WebClientFacade;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-class SummonerStatisticsTest {
+class LoLScoreStatsCalculatorTest {
 
     private WebClientFacade webClientFacade = mock(WebClientFacade.class);
-    private SummonerStatistics summonerStatistics = new SummonerStatistics(webClientFacade);
+    private LoLScoreStatsCalculator loLScoreStatsCalculator = new LoLScoreStatsCalculator(webClientFacade);
 
 
     @Test
@@ -26,7 +26,7 @@ class SummonerStatisticsTest {
                 .willReturn(matchDtos);
 
         // when
-        StatisticsDto result = summonerStatistics.calculateStatisticsBySummonerName("테스트 소환사");
+        StatsDto result = loLScoreStatsCalculator.calculateStatsBySummonerName("테스트 소환사");
 
         // then
         assertThat(result.getWinRate()).isEqualTo(0.5);
