@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 class LoLScoreStatsCalculatorTest {
 
@@ -33,21 +34,31 @@ class LoLScoreStatsCalculatorTest {
 
         // when
         StatsDto result = loLScoreStatsCalculator.calculateStatsBySummonerName("테스트 소환사 GG");
-        ChampionDataDto Jinx = findChampionByName(result, "Jinx");
-        ChampionDataDto Riven = findChampionByName(result, "Riven");
+        ChampionDataDto jinx = findChampionByName(result, "Jinx");
+        ChampionDataDto riven = findChampionByName(result, "Riven");
 
         // then
         assertAll(
-                () -> assertThat(result.getWinRate()).isCloseTo(0.666, offset(0.001)),
+                assertCloseTo(result.getWinRate(), 0.666, 0.001),
 
-                () -> assertThat(Jinx.getMatchCount()).isEqualTo(1),
-                () -> assertThat(Jinx.getWinRate()).isEqualTo(1.0),
-                () -> assertThat(Jinx.getAverageKda()).isCloseTo(3.6, offset(0.01)),
+                assertEquals(jinx.getMatchCount(), 1),
+                assertEquals(jinx.getWinRate(), 1.0),
+                assertCloseTo(jinx.getAverageKda(), 3.6, 0.01),
 
-                () -> assertThat(Riven.getMatchCount()).isEqualTo(2),
-                () -> assertThat(Riven.getWinRate()).isEqualTo(0.5),
-                () -> assertThat(Riven.getAverageKda()).isCloseTo(5.97, offset(0.01))
+                assertEquals(riven.getMatchCount(), 2),
+                assertEquals(riven.getWinRate(), 0.5),
+                assertCloseTo(riven.getAverageKda(), 5.97, 0.01)
         );
+    }
+
+    @NotNull
+    private static <T> Executable assertEquals(T actual, T expected) {
+        return () -> assertThat(actual).isEqualTo(expected);
+    }
+
+    @NotNull
+    private static Executable assertCloseTo(double actual, double expected, double offset) {
+        return () -> assertThat(actual).isCloseTo(expected, offset(offset));
     }
 
     @NotNull
