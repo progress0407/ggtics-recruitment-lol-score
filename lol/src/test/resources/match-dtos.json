@@ -1,0 +1,80 @@
+[
+  {
+    "info": {
+      "participants": [
+        {
+          "summonerName": "테스트 소환사 GG",
+          "teamId": 100,
+          "championName": "Jinx",
+          "gameDuration" : 2400,
+          "challenges": {
+            "deathsByEnemyChamps": 1,
+            "kda": 3.6
+          }
+        }
+      ],
+      "teams": [
+        {
+          "teamId": 100,
+          "win": true
+        },
+        {
+          "teamId": 200,
+          "win": false
+        }
+      ]
+    }
+  },
+  {
+    "info": {
+      "participants": [
+        {
+          "summonerName": "테스트 소환사 GG",
+          "teamId": 100,
+          "championName": "Riven",
+          "gameDuration" : 915,
+          "challenges": {
+            "deathsByEnemyChamps": 1,
+            "kda": 12.2
+          }
+        }
+      ],
+      "teams": [
+        {
+          "teamId": 100,
+          "win": true
+        },
+        {
+          "teamId": 200,
+          "win": false
+        }
+      ]
+    }
+  },
+  {
+    "info": {
+      "participants": [
+        {
+          "summonerName": "테스트 소환사 GG",
+          "teamId": 200,
+          "championName": "Riven",
+          "gameDuration" : 2400,
+          "challenges": {
+            "deathsByEnemyChamps": 1,
+            "kda": 3.6
+          }
+        }
+      ],
+      "teams": [
+        {
+          "teamId": 100,
+          "win": true
+        },
+        {
+          "teamId": 200,
+          "win": false
+        }
+      ]
+    }
+  }
+]

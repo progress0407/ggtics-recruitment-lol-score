@@ -6,14 +6,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ParticipantDto {
-    private String championName;
-    private int teamId;
-    private long physicalDamageDealt;
-    private long physicalDamageTaken;
-    private long champExperience;
-    private String summonerId;
-    private long summonerLevel;
     private String summonerName;
+    private int teamId;
+    private String championName;
+    private long gameDuration;
     private ChallengesDto challenges;
 
     public boolean equalsId(String summonerName) {
