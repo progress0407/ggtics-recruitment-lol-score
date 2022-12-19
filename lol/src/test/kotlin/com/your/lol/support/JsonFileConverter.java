@@ -2,14 +2,13 @@ package com.your.lol.support;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.your.lol.dto.riot.MatchDto;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.core.io.ClassPathResource;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.core.io.ClassPathResource;
 
 public class JsonFileConverter {
 

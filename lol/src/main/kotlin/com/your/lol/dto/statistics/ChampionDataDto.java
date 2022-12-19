@@ -1,13 +1,14 @@
 package com.your.lol.dto.statistics;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 @Data
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class ChampionDataDto {
 
-    private final String championName;
-    private final double winRate;
-    private final int matchCount; // 경기 횟수
-    private final double averageKda;
+    private String championName;
+    private double winRate;
+    private int matchCount; // 경기 횟수
+    private double averageKda;
 }
