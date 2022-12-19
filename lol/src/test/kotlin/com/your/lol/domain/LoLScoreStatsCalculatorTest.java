@@ -38,13 +38,15 @@ class LoLScoreStatsCalculatorTest {
 
         // then
         assertAll(
-                () -> assertThat(result.getWinRate()).isCloseTo(0.66, offset(0.01)),
+                () -> assertThat(result.getWinRate()).isCloseTo(0.666, offset(0.001)),
+
                 () -> assertThat(Jinx.getMatchCount()).isEqualTo(1),
                 () -> assertThat(Jinx.getWinRate()).isEqualTo(1.0),
-                () -> assertThat(Jinx.getAverageKda()).isEqualTo(1.0),
+                () -> assertThat(Jinx.getAverageKda()).isCloseTo(3.6, offset(0.01)),
+
                 () -> assertThat(Riven.getMatchCount()).isEqualTo(2),
                 () -> assertThat(Riven.getWinRate()).isEqualTo(0.5),
-                () -> assertThat(Riven.getAverageKda()).isEqualTo(1.0)
+                () -> assertThat(Riven.getAverageKda()).isCloseTo(5.97, offset(0.01))
         );
     }
 

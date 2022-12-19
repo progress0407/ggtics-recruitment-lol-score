@@ -10,10 +10,11 @@ import com.your.lol.dto.riot.ParticipantTeamDto;
 import com.your.lol.dto.statistics.ChampionDataDto;
 import com.your.lol.dto.statistics.StatsDto;
 import com.your.lol.support.WebClientFacade;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
@@ -38,19 +39,19 @@ public class LoLScoreStatsCalculator {
     @NotNull
     private StatsDto createStatistics(List<PreProcessedData> preProcessedData) {
         double winRate = calculateWinRate(preProcessedData);
-        Map<String, List<PreProcessedData>> dataByChampions = calculateDataByChampions(preProcessedData);
-        List<ChampionDataDto> championDataDtos = championDataDtos(dataByChampions);
+        Map<String, List<PreProcessedData>> dataByChampions = groupByChampionName(preProcessedData);
+        List<ChampionDataDto> championDataDtos = calculateStatsOfChampions(dataByChampions);
         return new StatsDto(winRate, championDataDtos);
     }
 
-    private List<ChampionDataDto> championDataDtos(Map<String, List<PreProcessedData>> dataByChampions) {
+    private List<ChampionDataDto> calculateStatsOfChampions(Map<String, List<PreProcessedData>> dataByChampions) {
         return dataByChampions.entrySet().stream()
-                .map(this::calculateChampionDataDto)
+                .map(this::calculateStatsOfChampion)
                 .collect(toUnmodifiableList());
     }
 
     @NotNull
-    private ChampionDataDto calculateChampionDataDto(Entry<String, List<PreProcessedData>> entry) {
+    private ChampionDataDto calculateStatsOfChampion(Entry<String, List<PreProcessedData>> entry) {
         String championName = entry.getKey();
         List<PreProcessedData> championData = entry.getValue();
         return new ChampionDataDto(
@@ -69,13 +70,16 @@ public class LoLScoreStatsCalculator {
     }
 
     private double calculateAverageKda(List<PreProcessedData> championData) {
+        long totalGameDuration = championData.stream()
+                .mapToLong(it -> it.getGameDuration())
+                .sum();
+
         return championData.stream()
                 .mapToDouble(it -> it.getGameDuration() * it.getKda())
-                .average()
-                .getAsDouble();
+                .sum() / totalGameDuration;
     }
 
-    private Map<String, List<PreProcessedData>> calculateDataByChampions(List<PreProcessedData> preProcessedData) {
+    private Map<String, List<PreProcessedData>> groupByChampionName(List<PreProcessedData> preProcessedData) {
         return preProcessedData.stream()
                 .collect(groupingBy(PreProcessedData::getChampionName));
     }
