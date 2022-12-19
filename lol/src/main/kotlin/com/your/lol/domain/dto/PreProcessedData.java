@@ -1,4 +1,4 @@
-package com.your.lol.domain;
+package com.your.lol.domain.dto;
 
 import lombok.Builder;
 import lombok.Data;

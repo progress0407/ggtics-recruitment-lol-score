@@ -1,8 +1,6 @@
 package com.your.lol.dto.statistics;
 
-import com.your.lol.domain.PreProcessedData;
 import java.util.List;
-import java.util.Map;
 
 import lombok.*;
 

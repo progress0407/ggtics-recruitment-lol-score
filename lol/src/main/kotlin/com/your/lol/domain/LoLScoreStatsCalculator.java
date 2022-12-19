@@ -3,6 +3,7 @@ package com.your.lol.domain;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toUnmodifiableList;
 
+import com.your.lol.domain.dto.PreProcessedData;
 import com.your.lol.dto.riot.ChallengesDto;
 import com.your.lol.dto.riot.MatchDto;
 import com.your.lol.dto.riot.ParticipantDto;
