@@ -20,7 +20,7 @@ abstract class GlobalTestUtils {
     }
 
     protected fun findChampionByName(stats: StatsDto, championName: String): ChampionDataDto {
-        return stats.championDataDtos.stream()
+        return stats.championDataDtos!!.stream()
                 .filter { it.championName == championName }
                 .findAny()
                 .get()

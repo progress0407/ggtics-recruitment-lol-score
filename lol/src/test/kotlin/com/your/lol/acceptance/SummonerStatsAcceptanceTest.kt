@@ -5,6 +5,8 @@ import com.your.lol.dto.statistics.StatsDto
 import io.mockk.every
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.mockito.BDDMockito
+import org.mockito.BDDMockito.given
 
 class SummonerStatsAcceptanceTest : AcceptanceTest() {
 
@@ -12,7 +14,8 @@ class SummonerStatsAcceptanceTest : AcceptanceTest() {
     fun `소환사 이름을 검색하여 전적 통계를을 산출한다`() {
         // given
         val matchDtos = createTestData("match-dtos.json")
-        every { webClientFacade.requestRiotStatistics("테스트 소환사 GG") } returns matchDtos
+        given(webClientFacade.requestRiotStatistics("테스트 소환사 GG"))
+                .willReturn(matchDtos)
 
         // when
         val response = get("/api/summoner/${"테스트 소환사 GG"}")
