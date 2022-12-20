@@ -2,6 +2,7 @@ package com.your.lol.support
 
 import com.your.lol.dto.riot.MatchDto
 import com.your.lol.dto.riot.SummonerDto
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
@@ -10,13 +11,17 @@ import org.springframework.web.util.UriBuilder
 import java.util.stream.Collectors
 
 @Component
-class WebClientFacade {
+class WebClientFacade(
+        @Value("\${riot.api.key}")
+        private var API_KEY: String = "RGAPI-8f7191c6-d169-437d-8a3d-f85b68d8c21e") {
+
     companion object {
         private const val KR_API_URL = "/summoner/v4/summoners/by-name/{summonerName}"
-        private const val API_KEY = "RGAPI-69961808-ee94-4d60-ac2b-4d68e178a340"
+
         private val krApiWebClient = WebClient.create("https://kr.api.riotgames.com/lol")
         private val asisWebClient = WebClient.create("https://asia.api.riotgames.com/lol")
     }
+
 
     fun requestRiotStatistics(summonerName: String): List<MatchDto?> {
         val summonerDto: SummonerDto? = requestSummonerDto(summonerName)
