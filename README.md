@@ -19,3 +19,17 @@
         4. `인분`과 같은 종합 평가 지표 추가
            1. 인분에 대한 자료 참고 혹은 스스로의 정의를 내릴 필요
         5. `Riot API의 Rate Limit`를 고려해 `효율적`으로 API를 사용할 수 있는 모듈 구현
+
+3. 프로젝트 구조
+   - 프로덕션
+     - MVC 패턴의 코틀린으로 작성
+     - Service 계층 생략
+       - 이유: 원자성을 보장하는 작업이 존재하지 않음
+     - `LoLScoreStatsCalculator`: 전적을 계산하는 실제 도메인 클래스
+     - `PreProcessedData`: 전적을 가공하기 위한 DTO 클래스, 도메인 로직에 사용됨
+     - `WebClientFacade`: WebClient를 Facade로 감싼 Utils성 클래스
+   - 테스트
+     - `match-dtos.json`: 테스트를 위한 데이터 파일
+     - `JsonFileConverter`: 테스트 데이터 제공을 위한 파일 to DTO 매퍼
+     - `GlobalTestUtils`: 테스트를 중복없이, 편리하게 작성하기 위한 Utils 클래스
+     - `AcceptanceTest`: 추후 인수테스트 클래스 추가가 될 경우 SpringBootTest를 Caching 가능하게 함 (일관된 환경 제공)
